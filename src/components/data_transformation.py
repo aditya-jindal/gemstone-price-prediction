@@ -37,8 +37,8 @@ class DataTransformation:
                 ("scaler", StandardScaler())
             ])
             cat_pipeline = Pipeline([
-                ("imputer", SimpleImputer(strategy="most-frequent")),
-                ("ordinal-encoder", OrdinalEncoder([cut_encoding, color_encoding, clarity_encoding]))
+                ("imputer", SimpleImputer(strategy="most_frequent")),
+                ("ordinal-encoder", OrdinalEncoder(categories=[cut_encoding, color_encoding, clarity_encoding])),
                 ("scalar", StandardScaler())
             ])
             preprocessor = ColumnTransformer([
@@ -55,7 +55,7 @@ class DataTransformation:
         
             return None
 
-    def initialize_data_transformation(self, train_path, test_path):
+    def initiate_data_transformation(self, train_path, test_path):
         try:
             logging.info("Started data transformation.")
 
@@ -76,8 +76,8 @@ class DataTransformation:
             logging.info("Applying preprocessing on train and test data.")
             X_train = preprocessor.fit_transform(X_train)
             X_test = preprocessor.transform(X_test)
-            train_data = np.concatenate((X_train, y_train), axis=1)
-            test_data = np.concatenate((X_test, y_test), axis=1)
+            train_data = np.concatenate((X_train, np.expand_dims(y_train, axis=-1)), axis=1)
+            test_data = np.concatenate((X_test, np.expand_dims(y_test, axis=-1)), axis=1)
             logging.info("Preprocessed train and test data.")
 
             save_object(self.config.preprocessor_path, preprocessor)

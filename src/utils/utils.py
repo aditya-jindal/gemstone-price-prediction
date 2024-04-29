@@ -8,7 +8,7 @@ from sklearn.metrics import r2_score, mean_absolute_error, mean_squared_error
 def save_object(file_path, obj):
     try:
         logging.info(f"Saving object in directory: {file_path}")
-        os.makedirs(os.path.dirnameI(file_path), exist_ok=True)
+        os.makedirs(os.path.dirname(file_path), exist_ok=True)
         with open(file_path, "wb") as file_obj:
             pickle.dump(obj, file_obj)
         logging.info("Object dumped.")

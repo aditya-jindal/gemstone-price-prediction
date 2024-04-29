@@ -15,13 +15,14 @@ class ModelTrainer:
     def __init__(self):
         self.config = ModelTrainerConfig()
 
-    def generate_perf_report(self, X_train, y_train, models):
+    def generate_perf_report(self, X_train, y_train, X_test, y_test, models):
         try:
             logging.info("Fitting models to train data.")
             perf_report = {}
             for model_name, model_object in models.items():
-                y_pred = model_object.fit(X_train)
-                perf_report[model_name] = r2_score(y_pred, y_train)
+                model_object.fit(X_train, y_train)
+                y_pred = model_object.predict(X_test)
+                perf_report[model_name] = r2_score(y_pred, y_test)
             logging.info("Models fitting done.")
 
             return perf_report
@@ -47,7 +48,7 @@ class ModelTrainer:
                 'XGBoost': XGBRegressor()
             }
 
-            perf_report = self.generate_perf_report(X_train, y_train, models)
+            perf_report = self.generate_perf_report(X_train, y_train, X_test, y_test, models)
             logging.info("Model Performance Report Generated:-")
             logging.info(perf_report)
             
